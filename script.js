@@ -43,6 +43,62 @@ con 0000 hacemos cambio de linea
 
 */
 
+function binarioAEmojisSVG(binario) {
+
+
+    binario = binaryResult;
+    // Convertir la cadena binaria en una matriz de emoticonos (cuadrados)
+    const svgWidth = 20; // Ancho de cada cuadrado
+    const svgHeight = 20; // Altura de cada cuadrado
+    const padding = 2; // Espaciado entre los cuadrados
+    let x = 1; // Posición inicial en el eje X
+    let y = 1; // Posición inicial en el eje Y
+
+    let svgContent = '';
+    const rows = binario.split('\n'); // Dividir por líneas
+
+    rows.forEach(row => {
+        row.split('').forEach(char => {
+            if (char === '1') {
+                // Cuadrado negro (⬛)
+                svgContent += `<rect x="${x}" y="${y}" width="${svgWidth}" height="${svgHeight}" fill="black" />`;
+            } else if (char === '0') {
+                // Cuadrado blanco (⬜)
+                svgContent += `<rect x="${x}" y="${y}" width="${svgWidth}" height="${svgHeight}" fill="white" stroke="black" stroke-width="0.1" />`;
+            }
+
+            x += svgWidth + padding; // Mover a la derecha para el siguiente cuadrado
+        });
+
+        x = 0; // Resetear posición X al inicio de la siguiente línea
+        y += svgHeight + padding; // Mover hacia abajo para la siguiente fila
+    });
+
+    // Crear el SVG completo
+    const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="${(svgWidth + padding) * binario.length}" height="${(svgHeight + padding) * rows.length}" viewBox="0 0 ${(svgWidth + padding) * binario.length} ${(svgHeight + padding) * rows.length}">
+            ${svgContent}
+        </svg>
+    `;
+
+    // Crear un blob para descargar el SVG
+    const blob = new Blob([svg], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+
+    // Crear un enlace para descargar el SVG
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'magia.svg';
+    a.click(); // Descargar el archivo SVG
+
+    // Limpiar el objeto URL después de descargar
+    URL.revokeObjectURL(url);
+}
+
+// Ejemplo de uso:
+const binario = "10101 001\n1001";
+binarioAEmojisSVG(binario);
+
 
 
 function create3DArray(dim1, dim2, dim3, initialValue = 0) {
@@ -135,8 +191,8 @@ function convertToText() {
         }
 
         for(let p = 0 ; p < palabrasBinary[k].length ; p++){
-            console.log(k);
-            console.log(p);
+            //console.log(k);
+            //console.log(p);
             letrasBinary[k][p] = decoPals[k][p].split('00');
            // console.log(letrasBinary[k][p]) // 
         }
